@@ -91,7 +91,7 @@ describe("yt info", () => {
             success = true;
         }
         catch (e) {
-            e.message.must.equal("Video not available.");
+            e.message.must.equal("Not a youtube link.");
         }
         success.must.be.false();
     });

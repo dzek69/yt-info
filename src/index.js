@@ -67,6 +67,9 @@ const api = new Api({ type: "text" });
 
 const getInfo = async (url) => {
     const id = findYoutubeId(url);
+    if (!id) {
+        throw new Error("Not a youtube link.");
+    }
     const link = getYoutubeLink(id);
 
     const page = await api.get(link);

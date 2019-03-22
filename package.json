@@ -1,6 +1,6 @@
 {
   "name": "@dzek69/yt-info",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "src/index.js",
   "repository": "https://github.com/dzek69/yt-info.git",
   "author": "Jacek Nowacki @dzek69 <git-public@dzek.eu>",

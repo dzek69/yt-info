@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [UNRELEASED]
 (nothing yet)
 
+## [1.0.1] - 2019-03-22
+### Changed
+- won't download anything and throw another message if link not detected as youtube link
+
 ## [1.0.0] - 2019-03-22
 ### Added
 - first version
