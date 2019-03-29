@@ -5,6 +5,7 @@ const shortCatsVideoSoFunny = "https://youtu.be/dQw4w9WgXcQ";
 
 const likes = 3635452;
 const dislikes = 161509;
+const views = 542689713;
 
 describe("yt info", () => {
     it("works with full link", async () => {
@@ -12,6 +13,7 @@ describe("yt info", () => {
         data.title.must.equal("Rick Astley - Never Gonna Give You Up (Official Music Video)");
         data.length.must.equal(212);
         data.time.must.equal("3:32");
+        data.views.must.be.gte(views);
         data.likesData.must.be.an.object();
 
         const ld = data.likesData;
@@ -33,6 +35,7 @@ describe("yt info", () => {
         data.title.must.equal("Rick Astley - Never Gonna Give You Up (Official Music Video)");
         data.length.must.equal(212);
         data.time.must.equal("3:32");
+        data.views.must.be.gte(views);
         data.likesData.must.be.an.object();
 
         const ld = data.likesData;
@@ -70,6 +73,7 @@ describe("yt info", () => {
         data.title.must.equal("The Prodigy - Music Reach (1,2,3,4)");
         data.must.not.have.property("length");
         data.must.not.have.property("time");
+        data.views.must.be.gte(56844);
         data.likesData.must.be.an.object();
 
         const ld = data.likesData;

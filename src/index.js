@@ -60,6 +60,11 @@ const getCorrectYoutubeInfo = (data) => {
     if (likesData) {
         Object.assign(result, { likesData });
     }
+
+    const viewsMatch = data.match(/itemprop="interactionCount" content="([\d]+)"/);
+    if (viewsMatch) {
+        result.views = Number(viewsMatch[1]);
+    }
     return result;
 };
 
