@@ -10,3 +10,6 @@
 /.yarnclean
 /.editorconfig
 /.eslintrc.json
+
+/test.js
+/test2.js

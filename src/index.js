@@ -45,14 +45,31 @@ const secondsToTime = (seconds) => {
     /* eslint-enable no-magic-numbers */
 };
 
+const secondsMatchers = [
+    data => {
+        const lengthMatch = data.match(/"length_seconds": *"?([0-9]+)/);
+        if (!lengthMatch) {
+            return;
+        }
+        return Number(lengthMatch[1]) || 0;
+    },
+    data => {
+        const lengthMatch = data.match(/approxDurationMs.*?(\d+)/);
+        if (!lengthMatch) {
+            return;
+        }
+        return Math.round(Number(lengthMatch[1]) / 1000) || 0; // eslint-disable-line no-magic-numbers
+    },
+];
+
 const getCorrectYoutubeInfo = (data) => {
     const titleMatch = data.match(/<title>(.*) - YouTube<\/title>/);
     const result = {};
     result.title = entities.decode(titleMatch[1]);
 
-    const lengthMatch = data.match(/"length_seconds": *"?([0-9]+)/);
+    const lengthMatch = secondsMatchers[1](data);
     if (lengthMatch) {
-        result.length = Number(lengthMatch[1]) || 0;
+        result.length = lengthMatch;
         result.time = secondsToTime(result.length);
     }
 

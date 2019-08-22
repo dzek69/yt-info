@@ -698,10 +698,10 @@ anymatch@^2.0.0:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
 
-api-reach@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.npmjs.org/api-reach/-/api-reach-0.3.0.tgz#88280a0d7bf15f60304cb7a2f05b939441164790"
-  integrity sha512-LFGMtH8n1jEL6sQM/Wzqgm3uodCw3kwOJq1D3QJXt/kkuIKndEvT62IGnFwL4/SVDSRMHU/ZD43mXLmeaVWLiw==
+api-reach@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.npmjs.org/api-reach/-/api-reach-0.4.0.tgz#e96c268287a77b9272b2e6210cb7afe1b4429207"
+  integrity sha512-ogJIt2vfNeY0Swc9bVGvhEclvVcikyWDPyh8kJua0lwzzL/6auZLoIEiFQ4NoQF91g0ZmYdz3eziX73ZPEzeYQ==
   dependencies:
     abort-controller "^2.0.2"
     better-custom-error "^1.0.0"

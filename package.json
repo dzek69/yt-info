@@ -1,6 +1,6 @@
 {
   "name": "@dzek69/yt-info",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "main": "src/index.js",
   "repository": "https://github.com/dzek69/yt-info.git",
   "author": "Jacek Nowacki @dzek69 <git-public@dzek.eu>",
@@ -32,7 +32,7 @@
     "node-fetch": "^2.3.0"
   },
   "dependencies": {
-    "api-reach": "^0.3.0",
+    "api-reach": "^0.4.0",
     "html-entities": "^1.2.1"
   }
 }

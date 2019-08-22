@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [UNRELEASED]
 (nothing yet)
 
+## [1.1.2] - 2019-08-22
+### Fixed
+- parsing video length
+
 ## [1.1.1] - 2019-06-06
 ### Fixed
 - dev deps audit warning
