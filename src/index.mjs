@@ -1,7 +1,5 @@
-import Api from "api-reach/dist";
-import { AllHtmlEntities as Entities } from "html-entities";
-
-const entities = new Entities();
+import Api from "api-reach";
+import cheerio from "cheerio";
 
 const findYoutubeId = (text) => {
     let match;
@@ -22,13 +20,14 @@ const getYoutubeLink = (id) => {
 };
 
 const getLikesInfo = (data) => {
-    const likesMatch = data.match(/like-button-renderer-like-button[^>]*><span[^>]*>(.*)<\/span>/);
-    const dislikesMatch = data.match(/like-button-renderer-dislike-button[^>]*><span[^>]*>(.*)<\/span>/);
-    if (!likesMatch || !dislikesMatch) {
+    const status = /"tooltip":"([\d\s]+)\/([\d\s]+)/i;
+
+    const match = data.match(status);
+    if (!match) {
         return;
     }
-    const likes = Number(likesMatch[1].replace(/[^\d]/g, ""));
-    const dislikes = Number(dislikesMatch[1].replace(/[^\d]/g, ""));
+    const likes = Number(match[1].replace(/[^\d]/g, ""));
+    const dislikes = Number(match[2].replace(/[^\d]/g, ""));
 
     const ratio = likes / dislikes;
     const ratio10 = likes / (likes + dislikes);
@@ -62,10 +61,11 @@ const secondsMatchers = [
     },
 ];
 
-const getCorrectYoutubeInfo = (data) => {
-    const titleMatch = data.match(/<title>(.*) - YouTube<\/title>/);
+const getCorrectYoutubeInfo = (data, $) => {
     const result = {};
-    result.title = entities.decode(titleMatch[1]);
+
+    const titleMatch = $(`meta[name="title"]`).attr("content");
+    result.title = titleMatch;
 
     const lengthMatch = secondsMatchers[1](data);
     if (lengthMatch) {
@@ -96,11 +96,12 @@ const getInfo = async (url) => {
 
     const page = await api.get(link);
     const html = page.body;
-    const correctTitleMatch = html.match(/<title>.* - YouTube<\/title>/);
-    if (!correctTitleMatch) {
+    const $ = cheerio.load(html);
+    const $metaTitle = $(`meta[name="title"]`);
+    if (!$metaTitle.length) {
         throw new Error("Video not available.");
     }
-    return getCorrectYoutubeInfo(html);
+    return getCorrectYoutubeInfo(html, $);
 };
 
 export default getInfo;

@@ -1,4 +1,4 @@
-import getInfo from "./index";
+import getInfo from "./index.mjs";
 
 const funCatsVideo = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 const shortCatsVideoSoFunny = "https://youtu.be/dQw4w9WgXcQ";
