@@ -1,4 +1,4 @@
-import getInfo from "./index.mjs";
+import { getYoutubeInfo } from "./index";
 
 const funCatsVideo = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 const shortCatsVideoSoFunny = "https://youtu.be/dQw4w9WgXcQ";
@@ -9,7 +9,7 @@ const views = 542689713;
 
 describe("yt info", () => {
     it("works with full link", async () => {
-        const data = await getInfo(funCatsVideo);
+        const data = await getYoutubeInfo(funCatsVideo);
         data.title.must.equal("Rick Astley - Never Gonna Give You Up (Video)");
         data.length.must.equal(212);
         data.time.must.equal("3:32");
@@ -31,7 +31,7 @@ describe("yt info", () => {
     });
 
     it("works with short link", async () => {
-        const data = await getInfo(shortCatsVideoSoFunny);
+        const data = await getYoutubeInfo(shortCatsVideoSoFunny);
         data.title.must.equal("Rick Astley - Never Gonna Give You Up (Video)");
         data.length.must.equal(212);
         data.time.must.equal("3:32");
@@ -57,11 +57,11 @@ describe("yt info", () => {
         let success = false;
 
         try {
-            await getInfo(unav);
+            await getYoutubeInfo(unav);
             success = true;
         }
-        catch (e) {
-            e.message.must.equal("Video not available.");
+        catch (e: unknown) {
+            (e as Error).message.must.equal("Video not available.");
         }
         success.must.be.false();
     });
@@ -69,7 +69,7 @@ describe("yt info", () => {
     // @todo find better blocked video :P
     it("partially works on blocked video", async () => {
         // const unav = "https://www.youtube.com/watch?v=lur-myye8WU";
-        // const data = await getInfo(unav);
+        // const data = await getYoutubeInfo(unav);
         //
         // data.title.must.equal("The Prodigy - Music Reach (1,2,3,4)");
         // data.must.not.have.property("length");
@@ -92,11 +92,11 @@ describe("yt info", () => {
         let success = false;
 
         try {
-            await getInfo(random);
+            await getYoutubeInfo(random);
             success = true;
         }
-        catch (e) {
-            e.message.must.equal("Not a youtube link.");
+        catch (e: unknown) {
+            (e as Error).message.must.equal("Not a youtube link.");
         }
         success.must.be.false();
     });

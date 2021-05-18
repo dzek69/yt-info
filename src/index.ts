@@ -1,28 +1,44 @@
-import Api from "api-reach";
+import { ApiClient as Api, RequestType } from "api-reach";
+import type { CheerioAPI } from "cheerio";
 import cheerio from "cheerio";
 
-const findYoutubeId = (text) => {
+interface LikesInfo {
+    likes: number;
+    dislikes: number;
+    ratio: number;
+    ratio10: number;
+}
+
+interface YTInfo {
+    title?: string;
+    length?: number;
+    time?: string; // as 10:30
+    views?: number;
+    likesData?: LikesInfo;
+}
+
+const findYoutubeId = (text: string): string | undefined => {
     let match;
 
-    match = text.match(/(youtube\.com).*([?|&]v=|embed\/)([a-z0-9A-Z_-]+)/);
+    match = /(youtube\.com).*([?|&]v=|embed\/)([a-z0-9A-Z_-]+)/.exec(text);
     if (match) {
         return match[3];
     }
 
-    match = text.match(/youtu\.be\/([a-z0-9A-Z_-]+)/);
+    match = /youtu\.be\/([a-z0-9A-Z_-]+)/.exec(text);
     if (match) {
         return match[1];
     }
 };
 
-const getYoutubeLink = (id) => {
+const getYoutubeLink = (id: string) => {
     return `https://www.youtube.com/watch?v=${id}`;
 };
 
-const getLikesInfo = (data) => {
+const getLikesInfo = (data: string) => {
     const status = /"tooltip":"([\d\s]+)\/([\d\s]+)/i;
 
-    const match = data.match(status);
+    const match = status.exec(data);
     if (!match) {
         return;
     }
@@ -36,33 +52,34 @@ const getLikesInfo = (data) => {
     };
 };
 
-const secondsToTime = (seconds) => {
-    /* eslint-disable no-magic-numbers */
+const secondsToTime = (seconds: number) => {
+    /* eslint-disable @typescript-eslint/no-magic-numbers */
     const min = Math.floor(seconds / 60);
     const sec = seconds % 60;
     return String(min) + ":" + (sec < 10 ? "0" + String(sec) : String(sec));
-    /* eslint-enable no-magic-numbers */
+    /* eslint-enable @typescript-eslint/no-magic-numbers */
 };
 
 const secondsMatchers = [
-    data => {
-        const lengthMatch = data.match(/"length_seconds": *"?([0-9]+)/);
+    (data: string) => {
+        const lengthMatch = /"length_seconds": *"?([0-9]+)/.exec(data);
         if (!lengthMatch) {
             return;
         }
         return Number(lengthMatch[1]) || 0;
     },
-    data => {
-        const lengthMatch = data.match(/approxDurationMs.*?(\d+)/);
+    (data: string) => {
+        const lengthMatch = /approxDurationMs.*?(\d+)/.exec(data);
         if (!lengthMatch) {
             return;
         }
-        return Math.round(Number(lengthMatch[1]) / 1000) || 0; // eslint-disable-line no-magic-numbers
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        return Math.round(Number(lengthMatch[1]) / 1000) || 0;
     },
 ];
 
-const getCorrectYoutubeInfo = (data, $) => {
-    const result = {};
+const getCorrectYoutubeInfo = (data: string, $: CheerioAPI) => {
+    const result: YTInfo = {};
 
     const titleMatch = $(`meta[name="title"]`).attr("content");
     result.title = titleMatch;
@@ -75,19 +92,19 @@ const getCorrectYoutubeInfo = (data, $) => {
 
     const likesData = getLikesInfo(data);
     if (likesData) {
-        Object.assign(result, { likesData });
+        result.likesData = likesData;
     }
 
-    const viewsMatch = data.match(/itemprop="interactionCount" content="([\d]+)"/);
+    const viewsMatch = /itemprop="interactionCount" content="([\d]+)"/.exec(data);
     if (viewsMatch) {
         result.views = Number(viewsMatch[1]);
     }
     return result;
 };
 
-const api = new Api({ type: "text" });
+const api = new Api({ type: RequestType.text });
 
-const getInfo = async (url) => {
+const getYoutubeInfo = async (url: string) => {
     const id = findYoutubeId(url);
     if (!id) {
         throw new Error("Not a youtube link.");
@@ -95,13 +112,15 @@ const getInfo = async (url) => {
     const link = getYoutubeLink(id);
 
     const page = await api.get(link);
-    const html = page.body;
+    const html = page.body as string;
     const $ = cheerio.load(html);
     const $metaTitle = $(`meta[name="title"]`);
-    if (!$metaTitle.length) {
+    if (!$metaTitle.length || !$metaTitle.attr("content")) {
         throw new Error("Video not available.");
     }
     return getCorrectYoutubeInfo(html, $);
 };
 
-export default getInfo;
+export {
+    getYoutubeInfo,
+};
