@@ -1,16 +1,15 @@
-import { getYoutubeInfo } from "./index";
+import { getYoutubeInfo } from "./index.js";
 
 const funCatsVideo = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 const shortCatsVideoSoFunny = "https://youtu.be/dQw4w9WgXcQ";
 
-const likes = 3635452;
-const dislikes = 161509;
-const views = 542689713;
+const likes = 15_000_000;
+const views = 542_689_713;
 
 describe("yt info", () => {
     it("works with full link", async () => {
         const data = await getYoutubeInfo(funCatsVideo);
-        data.title.must.equal("Rick Astley - Never Gonna Give You Up (Video)");
+        data.title.must.equal("Rick Astley - Never Gonna Give You Up (Official Music Video)");
         data.length.must.equal(212);
         data.time.must.equal("3:32");
         data.views.must.be.gte(views);
@@ -19,20 +18,11 @@ describe("yt info", () => {
         const ld = data.likesData;
         ld.likes.must.be.a.number();
         ld.likes.must.be.gte(likes);
-        ld.dislikes.must.be.a.number();
-        ld.dislikes.must.be.gte(dislikes);
-
-        ld.likes.must.be.gt(ld.dislikes); // we can safely assume that for this video :)
-
-        ld.ratio.must.be.a.number();
-
-        ld.ratio10.must.be.a.number();
-        ld.ratio10.must.be.gt(0.95);
     });
 
     it("works with short link", async () => {
         const data = await getYoutubeInfo(shortCatsVideoSoFunny);
-        data.title.must.equal("Rick Astley - Never Gonna Give You Up (Video)");
+        data.title.must.equal("Rick Astley - Never Gonna Give You Up (Official Music Video)");
         data.length.must.equal(212);
         data.time.must.equal("3:32");
         data.views.must.be.gte(views);
@@ -41,15 +31,6 @@ describe("yt info", () => {
         const ld = data.likesData;
         ld.likes.must.be.a.number();
         ld.likes.must.be.gte(likes);
-        ld.dislikes.must.be.a.number();
-        ld.dislikes.must.be.gte(dislikes);
-
-        ld.likes.must.be.gt(ld.dislikes);
-
-        ld.ratio.must.be.a.number();
-
-        ld.ratio10.must.be.a.number();
-        ld.ratio10.must.be.gt(0.95);
     });
 
     it("crashes on unavailable video", async () => {
@@ -99,5 +80,31 @@ describe("yt info", () => {
             (e as Error).message.must.equal("Not a youtube link.");
         }
         success.must.be.false();
+    });
+
+    it("works with /live links", async () => {
+        const data = await getYoutubeInfo("https://www.youtube.com/live/_aSFKdBm944?feature=share");
+        data.title.must.equal("You Guys are Mad. I Get it. - WAN Show February 3, 2023");
+        data.length.must.equal(12569);
+        data.time.must.equal("209:29");
+        data.views.must.be.gte(516850);
+        data.likesData.must.be.an.object();
+
+        const ld = data.likesData;
+        ld.likes.must.be.a.number();
+        ld.likes.must.be.gte(14107);
+    });
+
+    it("works with shorts links", async () => {
+        const data = await getYoutubeInfo("https://youtube.com/shorts/vi7MHYiu4aQ?feature=share");
+        data.title.must.equal("Spalony układ SMD SOT23 - jak odczytać oznaczenia? UV? Rzeźbiarz vs CTEK MXS 25A PRO");
+        data.length.must.equal(35);
+        data.time.must.equal("0:35");
+        data.views.must.be.gte(2260);
+        data.likesData.must.be.an.object();
+
+        const ld = data.likesData;
+        ld.likes.must.be.a.number();
+        ld.likes.must.be.gte(86);
     });
 });

@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [UNRELEASED]
 (nothing yet)
 
+## [4.0.0] - 2023-02-05
+### Breaking
+- Likes data shape changed, because YT no longer provides dislike info
+### Added
+- support for /live/ and /shorts/ links
+### Dev
+- deps update, fixes security warnings
+
 ## [3.0.0] - 2021-05-18
 ### Added
 - Typescript typings

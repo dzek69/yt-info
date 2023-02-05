@@ -1,12 +1,10 @@
 import { ApiClient as Api, RequestType } from "api-reach";
-import type { CheerioAPI } from "cheerio";
 import cheerio from "cheerio";
+
+import type { CheerioAPI } from "cheerio";
 
 interface LikesInfo {
     likes: number;
-    dislikes: number;
-    ratio: number;
-    ratio10: number;
 }
 
 interface YTInfo {
@@ -29,6 +27,12 @@ const findYoutubeId = (text: string): string | undefined => {
     if (match) {
         return match[1];
     }
+    match = /youtube\.com\/(live|shorts)\/([a-z0-9A-Z_-]+)/.exec(text);
+    if (match) {
+        return match[2];
+    }
+
+    return undefined;
 };
 
 const getYoutubeLink = (id: string) => {
@@ -36,19 +40,15 @@ const getYoutubeLink = (id: string) => {
 };
 
 const getLikesInfo = (data: string) => {
-    const status = /"tooltip":"([\d\s]+)\/([\d\s]+)/i;
+    const status = /"simpleText".{3,40}"accessibility":\{"label"[^\d]+([\d\s]+)/i;
 
     const match = status.exec(data);
     if (!match) {
         return;
     }
     const likes = Number(match[1].replace(/[^\d]/g, ""));
-    const dislikes = Number(match[2].replace(/[^\d]/g, ""));
-
-    const ratio = likes / dislikes;
-    const ratio10 = likes / (likes + dislikes);
     return {
-        likes, dislikes, ratio, ratio10,
+        likes,
     };
 };
 
@@ -82,7 +82,9 @@ const getCorrectYoutubeInfo = (data: string, $: CheerioAPI) => {
     const result: YTInfo = {};
 
     const titleMatch = $(`meta[name="title"]`).attr("content");
-    result.title = titleMatch;
+    if (titleMatch) {
+        result.title = titleMatch;
+    }
 
     const lengthMatch = secondsMatchers[1](data);
     if (lengthMatch) {
