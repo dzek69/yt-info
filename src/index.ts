@@ -40,15 +40,18 @@ const getYoutubeLink = (id: string) => {
 };
 
 const getLikesInfo = (data: string) => {
-    const status = /"simpleText".{3,40}"accessibility":\{"label"[^\d]+([\d\s]+)/i;
-
-    const match = status.exec(data);
-    if (!match) {
+    const likesMatch = /"likeCountIfLikedNumber":"(\d+)"/.exec(data);
+    if (!likesMatch) {
+        const altLikesMatch = /"iconName":"LIKE","title":"(\d+)"/.exec(data);
+        if (altLikesMatch) {
+            return {
+                likes: Number(altLikesMatch[1]),
+            };
+        }
         return;
     }
-    const likes = Number(match[1].replace(/[^\d]/g, ""));
     return {
-        likes,
+        likes: Number(likesMatch[1]),
     };
 };
 
@@ -60,7 +63,9 @@ const secondsToTime = (seconds: number) => {
     /* eslint-enable @typescript-eslint/no-magic-numbers */
 };
 
-const secondsMatchers = [
+type SecondMatcher = (data: string) => number | undefined;
+
+const secondsMatchers: [SecondMatcher, SecondMatcher] = [
     (data: string) => {
         const lengthMatch = /"length_seconds": *"?([0-9]+)/.exec(data);
         if (!lengthMatch) {

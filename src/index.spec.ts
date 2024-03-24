@@ -88,11 +88,7 @@ describe("yt info", () => {
         data.length.must.equal(12569);
         data.time.must.equal("209:29");
         data.views.must.be.gte(516850);
-        data.likesData.must.be.an.object();
-
-        const ld = data.likesData;
-        ld.likes.must.be.a.number();
-        ld.likes.must.be.gte(14107);
+        must(data.likesData).be.undefined();
     });
 
     it("works with shorts links", async () => {

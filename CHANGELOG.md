@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [UNRELEASED]
 (nothing yet)
 
+## [4.0.1] - 2024-03-24
+### Fixed
+- likes data fetching
+### Dev
+- big deps update
+
 ## [4.0.0] - 2023-02-05
 ### Breaking
 - Likes data shape changed, because YT no longer provides dislike info

@@ -23,6 +23,9 @@
             "env": {
                 "jest": true
             },
+            "globals": {
+                "must": "readonly"
+            },
             "rules": {
                 "func-names": "off",
                 "global-require": "off",
