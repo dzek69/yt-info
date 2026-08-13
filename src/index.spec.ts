@@ -9,9 +9,9 @@ const views = 542_689_713;
 describe("yt info", () => {
     it("works with full link", async () => {
         const data = await getYoutubeInfo(funCatsVideo);
-        data.title.must.equal("Rick Astley - Never Gonna Give You Up (Official Music Video)");
-        data.length.must.equal(212);
-        data.time.must.equal("3:32");
+        data.title.must.equal("Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)");
+        data.length.must.equal(213);
+        data.time.must.equal("3:33");
         data.views.must.be.gte(views);
         data.likesData.must.be.an.object();
 
@@ -22,9 +22,9 @@ describe("yt info", () => {
 
     it("works with short link", async () => {
         const data = await getYoutubeInfo(shortCatsVideoSoFunny);
-        data.title.must.equal("Rick Astley - Never Gonna Give You Up (Official Music Video)");
-        data.length.must.equal(212);
-        data.time.must.equal("3:32");
+        data.title.must.equal("Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)");
+        data.length.must.equal(213);
+        data.time.must.equal("3:33");
         data.views.must.be.gte(views);
         data.likesData.must.be.an.object();
 

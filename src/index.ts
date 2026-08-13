@@ -1,5 +1,5 @@
 import { ApiClient as Api, RequestType } from "api-reach";
-import cheerio from "cheerio";
+import * as cheerio from "cheerio";
 
 import type { CheerioAPI } from "cheerio";
 
@@ -102,7 +102,8 @@ const getCorrectYoutubeInfo = (data: string, $: CheerioAPI) => {
         result.likesData = likesData;
     }
 
-    const viewsMatch = /itemprop="interactionCount" content="([\d]+)"/.exec(data);
+    const viewsMatch = /itemprop="interactionCount" content="([\d]+)"/.exec(data)
+        ?? /"viewCount":"(\d+)"/.exec(data);
     if (viewsMatch) {
         result.views = Number(viewsMatch[1]);
     }
